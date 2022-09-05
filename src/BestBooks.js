@@ -15,7 +15,7 @@ class BestBooks extends React.Component {
 
   componentDidMount = () => {
     axios
-      .get("http://localhost:3005/books")
+      .get("http://localhost:3001/books")
       .then((result) => {
         this.setState({
           books: result.data,
@@ -43,7 +43,7 @@ class BestBooks extends React.Component {
       <Carousel.Item>
         <img
           className="d-block w-100"
-          src="holder.js/800x400?text=First slide&bg=373940"
+          src="https://news.fordham.edu/wp-content/uploads/2018/10/magicstock.jpg"
           alt="slide"
         />
         <Carousel.Caption>
