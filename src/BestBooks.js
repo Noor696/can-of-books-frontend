@@ -1,14 +1,18 @@
 import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+//import Form from 'react-bootstrap/Form';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import FormModal from './FormModel';
 import axios from "axios";
 
 class BestBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: []
+      books: [],
+      show: false,
+      status: ""
     }
   }
 
@@ -17,7 +21,7 @@ class BestBooks extends React.Component {
 
   componentDidMount = () => {
     axios
-      .get("http://localhost:3001/books")
+      .get(`http://localhost:3001/books`)
       .then((result) => {
         this.setState({
           books: result.data,
@@ -34,38 +38,77 @@ class BestBooks extends React.Component {
     });
   };
 
+  handleClose = () => {
+    this.setState({
+      show: false,
+    });
+  };
+
+  handleOnChange = (event) => {
+    this.setState({
+      status: event.target.value,
+    });
+  };
+
+  
+
   addBook = (event)=>{
     event.preventDefault();
-    alert(1);
-  }
+    const obj= {
+      title: event.target.title.value,
+      description: event.target.description.value,
+      status: this.state.status
+    }
 
+    console.log(obj);
+    axios
+     .post(`http://localhost:3001/addBook`, obj)
+     .then((result) => {
+      return this.setState({
+        books: result.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
+  this.handleClose();
+};
 
+//note: (delete) like (get)
+//(post) like (put)
+
+deleteBook = (id) => {
+  axios
+    .delete(`http://localhost:3001/books/${id}`)
+    .then((result) => {
+      this.setState({
+        books: result.data,
+      });
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
   render() {
 
-    /* TODO: render all the books in a Carousel */
-
     return (
-     
       <div>
 
-        <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
+        {/* <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2> */}
         <div id="event">
         <>
-        
-        <Button variant="outline-danger" onClick={this.handleShow} >
+        <Button variant="outline-danger" onClick={this.handleShow}>
           Add your favorite book
         </Button>
-        <Form.Group className="mb-3" controlId="form" onClick={this.addBook}>
-        <Form.Label>title:</Form.Label>
-        <Form.Control type="title" placeholder="Enter book title" />
-        <Form.Label>description:</Form.Label>
-        <Form.Control type="description" placeholder="Enter book description" />
-        <Form.Label>status:</Form.Label>
-        <Form.Control type="status" placeholder="Enter book status" />
-        </Form.Group>
-        
+        <FormModal 
+              show={this.state.show}
+              handleClose={this.handleClose}
+              addBook={this.addBook}
+              handleOnChange={this.handleOnChange}
+            />
         </>
 
         </div>
@@ -87,6 +130,11 @@ class BestBooks extends React.Component {
           <h3>{item.title}</h3>
           <p>{item.description}</p>
           <p>{item.status}</p>
+          <Button variant="light"
+              onClick={() => this.deleteBook(item._id)}
+              >
+              Delete This Book, sure!
+           </Button>
         </Carousel.Caption>
       </Carousel.Item>
       )})}
