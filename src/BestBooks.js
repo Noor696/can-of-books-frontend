@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormModal from './FormModel';
 import axios from "axios";
+import UpdateModal from './UpdateModal';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class BestBooks extends React.Component {
     this.state = {
       books: [],
       show: false,
+      showFlag: false,
+      currentBooks : {},
       status: ""
     }
   }
@@ -44,9 +47,17 @@ class BestBooks extends React.Component {
     });
   };
 
-  handleOnChange = (event) => {
+
+  handleShowUpdate = (item) => {
     this.setState({
-      status: event.target.value,
+      showFlag: true,
+      currentBooks : item,
+    });
+  };
+
+  handleCloseUpdate = () => {
+    this.setState({
+      showFlag: false,
     });
   };
 
@@ -57,7 +68,7 @@ class BestBooks extends React.Component {
     const obj= {
       title: event.target.title.value,
       description: event.target.description.value,
-      status: this.state.status
+      status: event.target.status.value,
     }
 
     console.log(obj);
@@ -91,6 +102,30 @@ deleteBook = (id) => {
       console.log(err);
     });
 };
+
+updateBook = (event) =>{
+  event.preventDefault();
+  let obj = {
+    title: event.target.title.value,
+    description: event.target.description.value,
+    status : event.target.status.value
+  }
+  console.log(obj)
+  const id = this.state.currentBooks._id;
+  axios
+      .put(`http://localhost:3001/books/books/${id}`, obj)
+      .then(result=>{
+        this.setState({
+          books : result.data
+        })
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      this.handleCloseUpdate();
+    }
+
+
 
   render() {
 
@@ -135,10 +170,23 @@ deleteBook = (id) => {
               >
               Delete This Book, sure!
            </Button>
+           <Button variant="outline-light"
+                onClick={() => this.handleShowUpdate(item)}
+                >
+                Update This Book, sure!
+            </Button>
         </Carousel.Caption>
       </Carousel.Item>
       )})}
       </Carousel>
+
+      <UpdateModal
+      show={this.state.showFlag}
+      handleCloseUpdate={this.handleCloseUpdate}
+      handleShowUpdate={this.handleShowUpdate}
+      updateBook={this.updateBook}
+      currentBooks={this.state.currentBooks}
+      />
       </div>
 
         ) : (
