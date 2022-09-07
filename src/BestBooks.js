@@ -80,7 +80,7 @@ class BestBooks extends React.Component {
 
 deleteBook = (id) => {
   axios
-    .delete(`http://localhost:3001/books/${id}`)
+    .delete(`http://localhost:3001/books/${id}`)  //id= ${id} use id to determine the book want delete
     .then((result) => {
       this.setState({
         books: result.data,
@@ -131,7 +131,7 @@ deleteBook = (id) => {
           <p>{item.description}</p>
           <p>{item.status}</p>
           <Button variant="light"
-              onClick={() => this.deleteBook(item._id)}
+              onClick={() => this.deleteBook(item._id)}  // if you want to pass a prameter to your function that inside event handler , just make it arrow function
               >
               Delete This Book, sure!
            </Button>
