@@ -24,7 +24,7 @@ class BestBooks extends React.Component {
 
   componentDidMount = () => {
     axios
-      .get(`http://localhost:3005/books`)
+      .get(`https://git.heroku.com/noor-best-book.git`)
       .then((result) => {
         this.setState({
           books: result.data,
