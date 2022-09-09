@@ -1,0 +1,16 @@
+.navbar .nav-link{
+    display: flex;
+    gap: 30px;
+    color: white;
+}
+
+#welcome {
+    height : 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1, h2 {
+    text-align: center;
+}
