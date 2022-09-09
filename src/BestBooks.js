@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FormModal from './FormModel';
 import axios from "axios";
 import UpdateModal from './UpdateModal';
+import { withAuth0 } from '@auth0/auth0-react';
+
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -65,10 +67,12 @@ class BestBooks extends React.Component {
 
   addBook = (event)=>{
     event.preventDefault();
+    const { user } = this.props.auth0;
     const obj= {
       title: event.target.title.value,
       description: event.target.description.value,
       status: event.target.status.value,
+      name: user.email
     }
 
     console.log(obj);
@@ -105,10 +109,12 @@ deleteBook = (id) => {
 
 updateBook = (event) =>{
   event.preventDefault();
+  const { user } = this.props.auth0;
   let obj = {
     title: event.target.title.value,
     description: event.target.description.value,
-    status : event.target.status.value
+    status : event.target.status.value,
+    name: user.email
   }
   console.log(obj)
   const id = this.state.currentBooks._id;
@@ -133,7 +139,7 @@ updateBook = (event) =>{
       <div>
 
         {/* <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2> */}
-        <div id="event">
+        <div id="form">
         <>
         <Button variant="outline-danger" onClick={this.handleShow}>
           Add your favorite book
@@ -165,7 +171,8 @@ updateBook = (event) =>{
           <h3>{item.title}</h3>
           <p>{item.description}</p>
           <p>{item.status}</p>
-          <Button variant="light"
+
+          <Button variant="outline-light"
               onClick={() => this.deleteBook(item._id)}  // if you want to pass a prameter to your function that inside event handler , just make it arrow function
               >
               Delete This Book, sure!
@@ -199,4 +206,4 @@ updateBook = (event) =>{
 } //class
 
 
-export default BestBooks;
+export default withAuth0(BestBooks);

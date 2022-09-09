@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { withAuth0 } from '@auth0/auth0-react';
 import WelcomePage from './WelcomePage';
+import Profile from './Profile';
 
 
 class App extends React.Component {
@@ -23,6 +24,11 @@ class App extends React.Component {
             <Route 
               exact path="/"
               element={isAuthenticated ?   <BestBooks /> : <WelcomePage />}
+            >
+            </Route>
+            <Route 
+              exact path="/profile"
+              element={isAuthenticated && <Profile />}
             >
             </Route>
             {/* PLACEHOLDER: add a route with a path of '/about' that renders the `About` component */}
